@@ -2,7 +2,7 @@
 
 Base image LXQT desktop (on debian stretch)
  - Run LXQT desktop in docker.
- - Use x11docker to run image to run GUI applications and desktop environments in docker images.
+ - Use x11docker to to run GUI applications and desktop environments in docker images.
  - Get [x11docker from github](https://github.com/mviereck/x11docker)
 
 # Example commands: 
