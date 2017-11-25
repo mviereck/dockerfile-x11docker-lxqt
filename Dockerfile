@@ -10,12 +10,12 @@
 
 FROM debian:stretch
 
+ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update
 RUN apt-get install -y apt-utils dbus-x11
 
 # OpenGL support
-RUN apt-get install -y libxv1 mesa-utils mesa-utils-extra libgl1-mesa-glx libglew2.0 \
-                       libglu1-mesa libgl1-mesa-dri libdrm2 libgles2-mesa libegl1-mesa
+RUN apt-get install -y mesa-utils mesa-utils-extra libxv1
 
 # Language/locale settings
 ENV LANG=en_US.UTF-8
@@ -29,7 +29,11 @@ RUN apt-get install -y menu menu-xdg mime-support desktop-file-utils desktop-bas
 
 # LXQT desktop
 RUN apt-get install -y --no-install-recommends lxqt-core
-RUN apt-get install -y --no-install-recommends qterminal lxqt-config lxqt-notificationd lxqt-about lxqt-qtplugin lxqt-runner juffed
+RUN apt-get install -y --no-install-recommends qterminal lxqt-config \
+    lxqt-notificationd lxqt-about lxqt-qtplugin lxqt-runner juffed
+
+# clean up
+RUN rm -rf /var/lib/apt/lists/*
 
 # config lxqt
 RUN mkdir -p /etc/skel/.config/lxqt
@@ -68,7 +72,7 @@ type=quicklaunch\n\
 # create startscript 
 RUN echo '#! /bin/bash\n\
 [ -e "$HOME/.config" ] || cp -R /etc/skel/. $HOME/ \n\
-dbus-run-session startlxqt \n\
+exec dbus-run-session startlxqt \n\
 ' > /usr/local/bin/start 
 RUN chmod +x /usr/local/bin/start 
 
