@@ -9,31 +9,30 @@
 #           x11docker x11docker/lxqt pcmanfm-qt
 
 FROM debian:stretch
-
 ENV DEBIAN_FRONTEND noninteractive
-RUN apt-get update
-RUN apt-get install -y apt-utils dbus-x11
+ 
+RUN apt-get  update
+RUN apt-get install -y dbus-x11 procps psmisc
 
-# OpenGL support
+# OpenGL / MESA
 RUN apt-get install -y mesa-utils mesa-utils-extra libxv1
 
 # Language/locale settings
-ENV LANG=en_US.UTF-8
-RUN echo "en_US.UTF-8 UTF-8" > /etc/locale.gen
-RUN echo "LANG=en_US.UTF-8" > /etc/default/locale
-RUN apt-get install -y locales
+# replace en_US by your desired locale setting, 
+# for example de_DE for german.
+ENV LANG en_US.UTF-8
+RUN echo $LANG UTF-8 > /etc/locale.gen
+RUN apt-get install -y locales && update-locale --reset LANG=$LANG
 
 # some utils to have proper menus, mime file types etc.
-RUN apt-get install -y --no-install-recommends xdg-utils xdg-user-dirs
-RUN apt-get install -y menu menu-xdg mime-support desktop-file-utils desktop-base
+RUN apt-get install -y --no-install-recommends xdg-utils xdg-user-dirs \
+    menu menu-xdg mime-support desktop-file-utils
 
 # LXQT desktop
 RUN apt-get install -y --no-install-recommends lxqt-core
 RUN apt-get install -y --no-install-recommends qterminal lxqt-config \
     lxqt-notificationd lxqt-about lxqt-qtplugin lxqt-runner juffed
-
-# clean up
-RUN rm -rf /var/lib/apt/lists/*
+RUN apt-get install -y qtwayland5
 
 # config lxqt
 RUN mkdir -p /etc/skel/.config/lxqt
@@ -69,11 +68,16 @@ apps\size=3\n\
 type=quicklaunch\n\
 ' >> /etc/xdg/lxqt/panel.conf
 
-# create startscript 
-RUN echo '#! /bin/bash\n\
+# startscript to copy dotfiles from /etc/skel
+# runs either CMD or image command from docker run
+RUN echo '#! /bin/sh\n\
 [ -e "$HOME/.config" ] || cp -R /etc/skel/. $HOME/ \n\
-exec dbus-run-session startlxqt \n\
+exec $* \n\
 ' > /usr/local/bin/start 
 RUN chmod +x /usr/local/bin/start 
 
-CMD start
+ENTRYPOINT start
+CMD startlxqt
+
+
+ENV DEBIAN_FRONTEND newt
