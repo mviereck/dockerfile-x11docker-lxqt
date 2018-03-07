@@ -1,22 +1,32 @@
 # x11docker/lxqt
 
-Base image LXQT desktop (on debian stretch)
- - Run LXQT desktop in docker.
- - Use x11docker to to run GUI applications and desktop environments in docker images.
+Dockerfile containing LXQt desktop
+ - Run LXQt desktop in docker. 
+ - Use x11docker to run GUI applications and desktop environments in docker images. 
  - Get [x11docker from github](https://github.com/mviereck/x11docker)
 
-# Example commands: 
+# Command examples: 
  - Single application: `x11docker x11docker/lxqt pcmanfm-qt`
- - Full desktop: `x11docker --desktop x11docker/lxqt` 
- 
+ - Full desktop: `x11docker --desktop x11docker/lxqt`
+ - Wayland application: `x11docker --wayland --dbus --gpu x11docker/lxqt qterminal`
+
+# Options:
+ - Persistent home folder stored on host with   `--home`
+ - Shared host folder with                      `--sharedir DIR`
+ - Hardware acceleration with option            `--gpu`
+ - Clipboard sharing with option                `--clipboard`
+ - Sound support with option                    `--alsa`
+ - With pulseaudio in image, sound support with `--pulseaudio`
+
+See `x11docker --help` for further options.
+
 # Extend base image
-To add your desired applications, create your own Dockerfile `mydockerfile` with this image as a base. Example:
+To add your desired applications, create your own Dockerfile with this image as a base. Example:
 ```
 FROM x11docker/lxqt
 RUN apt-get update
-RUN apt-get install -y firefox
+RUN apt-get install -y midori
 ```
-Build an image with `docker build -t mylxqt - < mydockerfile`. Run desktop with `x11docker --desktop mylxqt` or firefox only with `x11docker mylxqt firefox`.
 
 # Screenshot
  LXQT desktop in an Xnest window running with x11docker:
