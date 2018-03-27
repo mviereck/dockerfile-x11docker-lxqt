@@ -71,13 +71,13 @@ type=quicklaunch\n\
 # startscript to copy dotfiles from /etc/skel
 # runs either CMD or image command from docker run
 RUN echo '#! /bin/sh\n\
-[ -e "$HOME/.config" ] || cp -R /etc/skel/. $HOME/ \n\
+[ -n "$HOME" ] && [ ! -e "$HOME/.config" ] && cp -R /etc/skel/. $HOME/ \n\
 exec $* \n\
 ' > /usr/local/bin/start 
 RUN chmod +x /usr/local/bin/start 
 
-ENTRYPOINT start
-CMD startlxqt
+ENTRYPOINT ["/usr/local/bin/start"]
+CMD ["startlxqt"]
 
 
 ENV DEBIAN_FRONTEND newt
