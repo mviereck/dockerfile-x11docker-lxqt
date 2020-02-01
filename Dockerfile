@@ -10,11 +10,13 @@
 #
 # Options:
 # Persistent home folder stored on host with   --home
-# Shared host files or folders with            --share PATH
+# Shared host file or folder with              --share PATH
 # Hardware acceleration with option            --gpu
 # Clipboard sharing with option                --clipboard
-# Sound support with options                   --alsa or --pulseaudio
-# Printer support over CUPS with               --printer
+# ALSA sound support with option               --alsa
+# Pulseaudio sound support with option         --pulseaudio
+# Language setting with                        --lang [=$LANG]
+# Printing over CUPS with                      --printer
 # Webcam support with                          --webcam
 #
 # See x11docker --help for further options.
@@ -35,8 +37,6 @@ ENV LANG en_US.UTF-8
 RUN echo $LANG UTF-8 > /etc/locale.gen && \
     apt-get install -y locales && \
     update-locale --reset LANG=$LANG
-
-# some utils to have proper menus, mime file types etc.
 
 # LXQT desktop
 RUN apt-get install -y --no-install-recommends \

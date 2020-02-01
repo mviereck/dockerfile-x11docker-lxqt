@@ -1,9 +1,8 @@
 # x11docker/lxqt
 
-Dockerfile containing LXQt desktop
+Dockerfile containing LXQt desktop. Based on Debian.
  - Run LXQt desktop in docker. 
- - Use x11docker to run GUI applications and desktop environments in docker images. 
- - Get [x11docker from github](https://github.com/mviereck/x11docker)
+ - Use [x11docker](https://github.com/mviereck/x11docker) to run GUI applications and desktop environments in docker images.
 
 # Command examples: 
  - Single application: `x11docker x11docker/lxqt pcmanfm-qt`
@@ -12,11 +11,14 @@ Dockerfile containing LXQt desktop
 
 # Options:
  - Persistent home folder stored on host with   `--home`
- - Shared host folder with                      `--sharedir DIR`
+ - Shared host file or folder with              `--share PATH`
  - Hardware acceleration with option            `--gpu`
  - Clipboard sharing with option                `--clipboard`
- - Sound support with option                    `--alsa`
- - With pulseaudio in image, sound support with `--pulseaudio`
+ - ALSA sound support with option               `--alsa`
+ - Pulseaudio sound support with option         `--pulseaudio`
+ - Language locale settings with                `--lang [=$LANG]`
+ - Printing over CUPS with                      `--printer`
+ - Webcam support with                          `--webcam`
 
 See `x11docker --help` for further options.
 
