@@ -21,7 +21,7 @@
 #
 # See x11docker --help for further options.
 
-FROM debian:buster
+FROM debian:bullseye
 ENV DEBIAN_FRONTEND noninteractive
  
 RUN apt-get update && \
@@ -75,7 +75,7 @@ WallpaperMode=stretch\n\
 ' >/etc/skel/.config/pcmanfm-qt/lxqt/settings.conf
 
 # config panel / add some launchers
-RUN echo '[quicklaunch]\n\
+RUN mkdir -p /etc/xdg/lxqt && echo '[quicklaunch]\n\
 alignment=Left\n\
 apps\\1\desktop=/usr/share/applications/pcmanfm-qt.desktop\n\
 apps\\2\desktop=/usr/share/applications/qterminal.desktop\n\
@@ -84,4 +84,13 @@ apps\size=3\n\
 type=quicklaunch\n\
 ' >> /etc/xdg/lxqt/panel.conf
 
-CMD ["startlxqt"]
+RUN echo '#! /bin/bash\n\
+xdpyinfo | grep -q -i COMPOSITE || echo "x11docker/lxqt: X extension COMPOSITE not found.\n\
+Graphical glitches might occur.\n\
+If you run with x11docker option --nxagent, please add option --composite.\n\
+" >&2\n\
+startlxqt\n\
+' > /usr/local/bin/start && \
+chmod +x /usr/local/bin/start
+
+CMD start
